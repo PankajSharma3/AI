@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function LoginPage() {
@@ -14,7 +14,7 @@ export default function LoginPage() {
         setError('');
         setLoading(true);
         try {
-            const res = await axios.post('/api/auth/login', { email, password });
+            const res = await api.post('/api/auth/login', { email, password });
             localStorage.setItem('token', res.data.token);
             navigate('/');
         } catch (err) {
