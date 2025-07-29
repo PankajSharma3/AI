@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
@@ -15,9 +15,7 @@ export default function DashboardPage() {
         setLoading(true);
         setError('');
         try {
-            const res = await axios.get('/api/sessions', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            const res = await api.get('/api/sessions');
             setSessions(res.data);
         } catch (err) {
             setError('Failed to load sessions');
@@ -38,9 +36,7 @@ export default function DashboardPage() {
         setCreating(true);
         setError('');
         try {
-            await axios.post('/api/sessions', {}, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            await api.post('/api/sessions', {});
             fetchSessions();
         } catch (err) {
             setError('Failed to create session');
@@ -55,9 +51,7 @@ export default function DashboardPage() {
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this session?')) return;
         try {
-            await axios.delete(`/api/sessions/${id}`, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            await api.delete(`/api/sessions/${id}`);
             fetchSessions();
         } catch (err) {
             setError('Failed to delete session');
@@ -71,9 +65,7 @@ export default function DashboardPage() {
 
     const handleEditSave = async (id) => {
         try {
-            await axios.put(`/api/sessions/${id}`, { title: editTitle }, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            await api.put(`/api/sessions/${id}`, { title: editTitle });
             setEditingId(null);
             setEditTitle('');
             fetchSessions();
@@ -87,7 +79,7 @@ export default function DashboardPage() {
         const now = new Date();
         const diffTime = Math.abs(now - date);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
+
         if (diffDays === 1) return 'Yesterday';
         if (diffDays < 7) return `${diffDays} days ago`;
         return date.toLocaleDateString();
@@ -122,19 +114,19 @@ export default function DashboardPage() {
                         alignItems: 'center'
                     }}>
                         <div>
-                            <h1 style={{ 
-                                margin: 0, 
-                                fontSize: '32px', 
+                            <h1 style={{
+                                margin: 0,
+                                fontSize: '32px',
                                 fontWeight: '700',
                                 letterSpacing: '-0.5px',
                                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
                             }}>
                                 AI Playground
                             </h1>
-                            <p style={{ 
-                                margin: '8px 0 0 0', 
+                            <p style={{
+                                margin: '8px 0 0 0',
                                 opacity: 0.9,
-                                fontSize: '16px' 
+                                fontSize: '16px'
                             }}>
                                 Manage your AI sessions
                             </p>
@@ -177,7 +169,7 @@ export default function DashboardPage() {
                             onClick={handleCreateSession}
                             disabled={creating}
                             style={{
-                                background: creating 
+                                background: creating
                                     ? 'linear-gradient(135deg, #4b5563 0%, #6b7280 100%)'
                                     : 'linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0e7490 100%)',
                                 color: 'white',
@@ -282,7 +274,7 @@ export default function DashboardPage() {
                                 lineHeight: '1.6',
                                 color: '#94a3b8'
                             }}>
-                                Start your AI journey by creating your first session. 
+                                Start your AI journey by creating your first session.
                                 Click the <strong style={{ color: '#06b6d4' }}>New Session</strong> button to get started!
                             </p>
                         </div>
@@ -351,8 +343,8 @@ export default function DashboardPage() {
                                                 onBlur={e => e.target.style.borderColor = '#334155'}
                                             />
                                             <div style={{ display: 'flex', gap: '8px' }}>
-                                                <button 
-                                                    onClick={() => handleEditSave(s._id)} 
+                                                <button
+                                                    onClick={() => handleEditSave(s._id)}
                                                     style={{
                                                         background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                                                         color: 'white',
@@ -369,8 +361,8 @@ export default function DashboardPage() {
                                                 >
                                                     Save
                                                 </button>
-                                                <button 
-                                                    onClick={() => setEditingId(null)} 
+                                                <button
+                                                    onClick={() => setEditingId(null)}
                                                     style={{
                                                         background: '#334155',
                                                         color: '#e2e8f0',
@@ -422,8 +414,8 @@ export default function DashboardPage() {
 
                                     {editingId !== s._id && (
                                         <div style={{ display: 'flex', gap: '8px' }}>
-                                            <button 
-                                                onClick={() => handleEdit(s._id, s.title)} 
+                                            <button
+                                                onClick={() => handleEdit(s._id, s.title)}
                                                 style={{
                                                     background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
                                                     color: 'white',
@@ -441,8 +433,8 @@ export default function DashboardPage() {
                                             >
                                                 ✏️ Rename
                                             </button>
-                                            <button 
-                                                onClick={() => handleDelete(s._id)} 
+                                            <button
+                                                onClick={() => handleDelete(s._id)}
                                                 style={{
                                                     background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
                                                     color: 'white',
