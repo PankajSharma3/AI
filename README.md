@@ -151,10 +151,10 @@ WEB_/
 │   │   ├── Session.js          # Session data model
 │   │   └── User.js             # User data model
 │   ├── routes/
-│       ├── ai.js               # AI chat routes
-│       ├── auth.js             # Authentication routes
-│       └── session.js          # Session management routes
-│
+│   |   ├── ai.js               # AI chat routes
+│   |   ├── auth.js             # Authentication routes
+│   |   └── session.js          # Session management routes
+│   |
 │   ├── index.js                # Main server file
 │   ├── package.json
 │   └── .env                    # Environment variables
