@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import JSZip from 'jszip';
@@ -23,9 +23,7 @@ export default function SessionPage() {
         setLoading(true);
         setError('');
         try {
-            const res = await axios.get(`/api/sessions/${id}`, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            const res = await api.get(`/api/sessions/${id}`);
             setSession(res.data);
         } catch (err) {
             setError('Failed to load session');
@@ -57,9 +55,7 @@ export default function SessionPage() {
             setSession({ ...session, chat: newChat });
             setPrompt('');
             // Call AI backend
-            const aiRes = await axios.post('/api/ai/generate', { prompt }, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            const aiRes = await api.post('/api/ai/generate', { prompt });
             // Add AI response to chat and update code
             const updatedSession = {
                 ...session,
@@ -68,9 +64,7 @@ export default function SessionPage() {
             };
             setSession(updatedSession);
             // Persist to backend
-            await axios.put(`/api/sessions/${id}`, updatedSession, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-            });
+            await api.put(`/api/sessions/${id}`, updatedSession);
         } catch (err) {
             setError('AI error or failed to update session');
         }
@@ -297,7 +291,7 @@ export default function SessionPage() {
                                             width: '32px',
                                             height: '32px',
                                             borderRadius: '50%',
-                                            background: msg.role === 'user' 
+                                            background: msg.role === 'user'
                                                 ? 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)'
                                                 : 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
                                             display: 'flex',
@@ -309,8 +303,8 @@ export default function SessionPage() {
                                             {msg.role === 'user' ? '👤' : '🤖'}
                                         </div>
                                         <div style={{
-                                            background: msg.role === 'user' 
-                                                ? 'rgba(124, 58, 237, 0.2)' 
+                                            background: msg.role === 'user'
+                                                ? 'rgba(124, 58, 237, 0.2)'
                                                 : 'rgba(30, 41, 59, 0.8)',
                                             border: `1px solid ${msg.role === 'user' ? 'rgba(124, 58, 237, 0.3)' : 'rgba(51, 65, 85, 0.5)'}`,
                                             borderRadius: '16px',
@@ -455,7 +449,7 @@ export default function SessionPage() {
                                     onClick={() => setTab('jsx')}
                                     style={{
                                         flex: 1,
-                                        background: tab === 'jsx' 
+                                        background: tab === 'jsx'
                                             ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
                                             : 'transparent',
                                         color: tab === 'jsx' ? 'white' : '#94a3b8',
@@ -474,7 +468,7 @@ export default function SessionPage() {
                                     onClick={() => setTab('css')}
                                     style={{
                                         flex: 1,
-                                        background: tab === 'css' 
+                                        background: tab === 'css'
                                             ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
                                             : 'transparent',
                                         color: tab === 'css' ? 'white' : '#94a3b8',
