@@ -6,10 +6,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://ai-3c7y.onrender.com/',
+      '/api': process.env.VITE_API_URL || 'http://localhost:5000',
     }
   },
   define: {
-    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://your-backend-url.vercel.app')
+    'process.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'http://localhost:5000')
   }
 })
